@@ -10,13 +10,11 @@ cartRouter.route('/')
     .get(protectedRoutes, allowedTo('customer'), cart.getLogedUserCart)
     .put(protectedRoutes, allowedTo('customer'), validation(updateQuantitySchema),cart.updateQuantity)
 
-    // ApplyCoupon - RemoveCoupon
 cartRouter.post('/ApplyCoupon', protectedRoutes, allowedTo('customer'),validation(applyCouponSchema), cart.applyCoupon)
 cartRouter.delete('/RemoveCoupon', protectedRoutes, allowedTo('customer'), cart.removeCoupon)
 
 
 cartRouter.route('/:id')
     .delete(protectedRoutes, allowedTo('customer'),validation(removeFromCartSchema), cart.removeFromCart)
-
     
 export default cartRouter

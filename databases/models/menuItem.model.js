@@ -46,17 +46,8 @@ const menuItemSchema = mongoose.Schema({
 }, { timestamps: true })
 
 
-// const autoPopulate = function () {
-    // this.populate('subcategory', 'name -_id')
-    // .populate('category', 'name -_id')
-// }
-// menuItemSchema.pre('find', autoPopulate)
-// menuItemSchema.pre('findOne', autoPopulate)
-
-
 menuItemSchema.post('init', (doc) => {
     doc.image = process.env.BASE_URL + "/menuItem/" + doc.image
 })
-
 
 export const menuItemModel = mongoose.model('menuItem', menuItemSchema)

@@ -12,12 +12,6 @@ const createCategory = catchAsyncError(async (req, res, next) => {
     res.json({ message: 'success created', result })
 })
 
-const getAllCategories = factor.getAll(categoryModel)
-
-
-const getCategory = factor.getOne(categoryModel)
-
-
 const updateCategory = catchAsyncError(async (req, res, next) => {
     const { id } = req.params
     if (req.body.name) req.body.slug = slugify(req.body.name)
@@ -28,8 +22,12 @@ const updateCategory = catchAsyncError(async (req, res, next) => {
     result && res.json({ message: 'success updated', result })
 })
 
+const getAllCategories = factor.getAll(categoryModel)
+
+const getCategory = factor.getOne(categoryModel)
 
 const deleteCategory = factor.deleteOne(categoryModel)
+
 
 export {
     createCategory,

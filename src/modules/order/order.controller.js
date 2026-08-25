@@ -58,7 +58,6 @@ const getAllOrders = catchAsyncError(async (req, res, next) => {
     res.json({ message: 'success', Orders: order })
 })
 
-// Update Order Status Staff Only
 const updateOrderStatus = catchAsyncError(async (req, res, next) => {
     const { status } = req.body
 
@@ -78,19 +77,15 @@ const updateOrderStatus = catchAsyncError(async (req, res, next) => {
         return next(new AppError(`Cannot change order status from ${order.status} to ${status}`, 400))
     order.status = status
 
-    // Delivered
     if (status === 'delivered') order.deliveredAt = new Date()
 
-    // Staff Cancellation
     if (status === 'cancelled') {
         order.cancellationReason = req.body.cancellationReason || null
         order.cancelledBy = 'staff'
     }
     await order.save()
 
-    // Send Status Update To Customer
     const io = req.app.get('io')
-
     io.to(`order:${order._id}`).emit('orderStatusUpdated', {
         orderId: order._id,
         orderNumber: order.orderNumber,

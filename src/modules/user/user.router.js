@@ -15,13 +15,13 @@ userRouter.get('/me', protectedRoutes, allowedTo('manager', 'staff', 'customer')
 
 userRouter.delete('/me', protectedRoutes, allowedTo('customer'), user.deleteUser)
 
-// manager delete >>>customer
+
 userRouter.delete('/:id', protectedRoutes, allowedTo('manager'), validation(valid.deleteUserByIdSchema), user.deleteUser)
 
-//  change password
+
 userRouter.patch
     ('/changePassword', protectedRoutes, allowedTo('manager', 'staff', 'customer'), validation(valid.changePasswordSchema), user.changePassword)
-//  change manager theRole 
+
 userRouter.patch('/changeUserRole/:id', protectedRoutes, allowedTo('manager'), validation(valid.changeUserRoleSchema), user.changeUserRole)
 
 export default userRouter

@@ -4,8 +4,8 @@ import { uploadSingleFile } from "../../middleware/fileUpload.js"
 import { allowedTo, protectedRoutes } from "../Auth/auth.controller.js"
 import { validation } from "../../middleware/validation.js"
 import { createMenuItemSchema, DeleteMenuItemSchema, updateMenuItemSchema } from "./menuItem.validation.js"
-const menuItemRouter = express.Router()
 
+const menuItemRouter = express.Router()
 
 menuItemRouter.route('/')
     .post(uploadSingleFile('image', 'menuItem'), protectedRoutes, allowedTo('manager', 'staff'),validation(createMenuItemSchema), menuItem.createMenuItem)

@@ -9,19 +9,16 @@ const createModifier = catchAsyncError(async (req, res, next) => {
     res.status(201).json({ message: 'success created', result })
 })
 
-
-const getAllModifiers = factor.getAll(modifierModel)
-
-
-const getModifier = factor.getOne(modifierModel)
-
-
 const updateModifier = catchAsyncError(async (req, res, next) => {
     const { id } = req.params
     let result = await modifierModel.findByIdAndUpdate(id, req.body, { returnDocument: 'after' })
     if (!result) return next(new AppError('modifier not found', 404))
     res.status(200).json({ message: 'success updated', result })
 })
+
+const getAllModifiers = factor.getAll(modifierModel)
+
+const getModifier = factor.getOne(modifierModel)
 
 const deleteModifier = factor.deleteOne(modifierModel)
 

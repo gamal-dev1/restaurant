@@ -14,7 +14,6 @@ const createSubCategory = catchAsyncError(async (req, res, next) => {
 })
 
 const getAllSubCategories = catchAsyncError(async (req, res, next) => {
-
     let filter = {}
     if (req.params.categoryId)
         filter = { category: req.params.categoryId }
@@ -22,10 +21,6 @@ const getAllSubCategories = catchAsyncError(async (req, res, next) => {
     let result = await subcategoryModel.find(filter)
     res.json({ message: 'success', result })
 })
-
-
-const getSubCategory = factor.getOne(subcategoryModel)
-
 
 const updateSubCategory = catchAsyncError(async (req, res, next) => {
     const { id } = req.params
@@ -37,6 +32,8 @@ const updateSubCategory = catchAsyncError(async (req, res, next) => {
     res.json({ message: 'success update', result })
 })
 
+
+const getSubCategory = factor.getOne(subcategoryModel)
 
 const deleteSubCtegory = factor.deleteOne(subcategoryModel)
 

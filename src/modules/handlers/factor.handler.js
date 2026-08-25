@@ -7,7 +7,6 @@ export const getAll = (model) => {
         let apiFeatures = new ApiFeatures(model.find(), req.query)
             .paginate().filter().sort().search().fields()
 
-        // execute query
         let result = await apiFeatures.mongooseQuery
         res.json({ message: 'success', page: apiFeatures.page, result })
     })

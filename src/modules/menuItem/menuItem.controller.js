@@ -12,12 +12,6 @@ const createMenuItem = catchAsyncError(async (req, res, next) => {
     res.status(201).json({ message: 'success created', result })
 })
 
-
-const getAllMenuItems = factor.getAll(menuItemModel)
-
-const getMenuItem = factor.getOne(menuItemModel)
-
-
 const updateMenuItem = catchAsyncError(async (req, res, next) => {
     const { id } = req.params
     if (req.file) req.body.image = req.file.filename
@@ -27,6 +21,9 @@ const updateMenuItem = catchAsyncError(async (req, res, next) => {
     res.status(200).json({ message: 'success updated', result })
 })
 
+const getAllMenuItems = factor.getAll(menuItemModel)
+
+const getMenuItem = factor.getOne(menuItemModel)
 
 const deleteMenuItem = factor.deleteOne(menuItemModel)
 

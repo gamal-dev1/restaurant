@@ -9,10 +9,8 @@ orderRouter.route('/')
     .post(protectedRoutes, allowedTo('customer'), validation(createOrderSchema), order.createCashOrder)
     .get(protectedRoutes, allowedTo('customer'), order.getUserOrder)
 
-// manager getAll Orders
 orderRouter.get('/All', protectedRoutes, allowedTo('manager','staff'), order.getAllOrders)
 
-// Staff Update Order Status
 orderRouter.patch('/:id/status', protectedRoutes, allowedTo('staff'), validation(updateOrderStatusSchema), order.updateOrderStatus)
 
 export default orderRouter
