@@ -1,8 +1,10 @@
 import multer from "multer"
 import { AppError } from "../utils/AppError.js"
-
+import fs from "fs"
 
 export const uploadSingleFile = (fieldName, folderName) => {
+    
+    fs.mkdirSync(`uploads/${folderName}`, { recursive: true })
 
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
