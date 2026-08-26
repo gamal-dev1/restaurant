@@ -1,12 +1,14 @@
 
-import joi from 'joi';
+import joi from 'joi'
 
-const modifierSchema = joi.object({
-    name: joi.string().min(2).max(30).required().trim(),
-    price: joi.number().min(0).required(),
-    menuItem: joi.string().hex().length(24).required()
+export const createModifierSchema = joi.object({
+    modifiers: joi.array().items(joi.object({
+        name: joi.string().min(2).max(30).required().trim(),
+        price: joi.number().min(0).required(),
+        menuItem: joi.string().hex().length(24).required()
+    })
+    ).required()
 })
-export const createModifierSchema = joi.array().items(modifierSchema)
 
 export const updateModifierSchema = joi.object({
     id: joi.string().hex().length(24).required(),
