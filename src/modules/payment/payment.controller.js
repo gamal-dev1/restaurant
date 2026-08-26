@@ -60,10 +60,12 @@ const createPayment = catchAsyncError(async (req, res, next) => {
         })
     })
 
-    let data = await response.json()
+    let responseText = await response.text()
 
     if (!response.ok)
-        return next(new AppError(data.detail || data.message || 'Failed to create payment', 400))
+        return next(new AppError(responseText, response.status))
+
+    let data = JSON.parse(responseText)
 
     let checkoutUrl = `${process.env.PAYMOB_BASE_URL}/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${data.client_secret}`
 
