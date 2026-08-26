@@ -60,12 +60,10 @@ const createPayment = catchAsyncError(async (req, res, next) => {
         })
     })
 
-    let responseText = await response.text()
+    let data = await response.json()
 
     if (!response.ok)
-        return next(new AppError(responseText, response.status))
-
-    let data = JSON.parse(responseText)
+        return next(new AppError(data.detail || data.message || 'Failed to create payment', 400))
 
     let checkoutUrl = `${process.env.PAYMOB_BASE_URL}/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${data.client_secret}`
 
@@ -76,7 +74,6 @@ const createPayment = catchAsyncError(async (req, res, next) => {
 })
 
 const paymentWebhook = catchAsyncError(async (req, res) => {
-    console.log(JSON.stringify(req.body, null, 2))
     let { obj } = req.body
 
     let {
@@ -96,8 +93,15 @@ const paymentWebhook = catchAsyncError(async (req, res) => {
         owner,
         pending,
         success,
-        order: { id: orderId },
-        source_data: { pan, sub_type, type }
+        order: {
+            id: orderId,
+            merchant_order_id
+        },
+        source_data: {
+            pan,
+            sub_type,
+            type
+        }
     } = obj
 
     let fields = [
@@ -132,7 +136,7 @@ const paymentWebhook = catchAsyncError(async (req, res) => {
         return res.status(401).json({ message: 'Invalid HMAC' })
 
     if (success === true && pending === false) {
-        let order = await orderModel.findOne({ _id: obj.order?.merchant_order_id })
+        let order = await orderModel.findById(merchant_order_id)
 
         if (!order)
             return res.status(404).json({ message: 'Order not found' })
@@ -168,21 +172,15 @@ const paymentWebhook = catchAsyncError(async (req, res) => {
 })
 
 const paymentSuccess = catchAsyncError(async (req, res) => {
-    let order = await orderModel.findOne({ paymentMethod: 'card' }).sort({ createdAt: -1 })
-
-    if (!order)
-        return res.status(404).json({ message: 'Order not found' })
-
     res.status(200).json({
-        message: 'Payment completed',
-        totalAmount: order.totalPriceAfterDiscount,
-        orderId: order.orderNumber,
-        paidAt: order.paidAt
+        message: 'Payment completed, waiting for confirmation'
     })
 })
 
 const paymentCancel = catchAsyncError(async (req, res) => {
-    res.status(200).json({ message: 'Payment canceled' })
+    res.status(200).json({
+        message: 'Payment canceled'
+    })
 })
 
 export {
