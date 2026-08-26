@@ -59,13 +59,14 @@ const createPayment = catchAsyncError(async (req, res, next) => {
     console.log('PAYMOB STATUS:', response.status)
     console.log('PAYMOB RESPONSE:', responseText)
     let data = JSON.parse(responseText)
-    
+
 
     if (!response.ok) return next(new AppError(data.detail || data.message || 'Failed to create payment', 400))
     let checkoutUrl = `${process.env.PAYMOB_BASE_URL}/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${data.client_secret}`
     return res.status(200).json({ message: 'success', checkoutUrl })
 })
 const paymentWebhook = catchAsyncError(async (req, res) => {
+    console.log('PAYMOB WEBHOOK:', JSON.stringify(req.body, null, 2))
     let { obj } = req.body
     let { amount_cents, created_at, currency, error_occured, has_parent_transaction, id, integration_id, is_3d_secure, is_auth, is_capture, is_refunded, is_standalone_payment, is_voided, owner, pending, success, order: { id: orderId, merchant_order_id }, source_data: { pan, sub_type, type } } = obj
     let fields = [amount_cents, created_at, currency, error_occured, has_parent_transaction, id, integration_id, is_3d_secure, is_auth, is_capture, is_refunded, is_standalone_payment, is_voided, orderId, owner, pending, pan, sub_type, type, success]
