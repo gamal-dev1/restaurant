@@ -54,7 +54,13 @@ const createPayment = catchAsyncError(async (req, res, next) => {
             redirection_url: `${process.env.BASE_URL}/api/v1/payment/success`
         })
     })
-    let data = await response.json()
+
+    let responseText = await response.text()
+    console.log('PAYMOB STATUS:', response.status)
+    console.log('PAYMOB RESPONSE:', responseText)
+    let data = JSON.parse(responseText)
+    
+
     if (!response.ok) return next(new AppError(data.detail || data.message || 'Failed to create payment', 400))
     let checkoutUrl = `${process.env.PAYMOB_BASE_URL}/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${data.client_secret}`
     return res.status(200).json({ message: 'success', checkoutUrl })
