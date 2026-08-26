@@ -76,6 +76,7 @@ const createPayment = catchAsyncError(async (req, res, next) => {
 })
 
 const paymentWebhook = catchAsyncError(async (req, res) => {
+    console.log(JSON.stringify(req.body, null, 2))
     let { obj } = req.body
 
     let {
